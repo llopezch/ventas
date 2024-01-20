@@ -1,4 +1,4 @@
 dash
 pandas
 gunicorn
-openpyx
+openpyxl
