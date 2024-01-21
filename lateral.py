@@ -62,7 +62,7 @@ layout=dbc.Container([
                                          )   
                             ],style={"display":"flex"}),                         
                    
-                   ])
+                   ], lg=4, md=6, xs=12)
                ])
            ], style={"margin-left": "30px"}), 
            html.Br(),
