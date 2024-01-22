@@ -7,7 +7,7 @@ from dash.dependencies import Output,Input
 from app import app
 import lateral,grafico1,grafico2
 
-
+server=app.server
 app.layout=dbc.Container([                                                             
                dbc.Row([
                    dbc.Col([
