@@ -62,7 +62,7 @@ layout=dbc.Container([
                                          )   
                             ],style={"display":"flex"}),                         
                    
-                   ], lg=4, md=7)
+                   ], lg=4, md=7)# Aquí especificamos el ancho en diferentes tamaños de pantalla
                ])
            ], style={"margin-left": "30px"}), 
            html.Br(),
