@@ -9,7 +9,7 @@ from df import df
 
 layout=dbc.Container([
          dbc.Card([
-      
+       
            html.Hr(style={"color":"white"}),
            html.Br(),
            html.Legend("Filtros",style={"font-size":"16px","padding-left":"20px","color":"white"}),
