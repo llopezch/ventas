@@ -7,6 +7,7 @@ from dash import dcc,html,dash_table
 from app import app
 from df import df,lat_long
 import plotly.graph_objects as go
+import os
 
 
 listas_años=[{"label":x,"value":x}for x in sorted(df["Año"].unique())]
@@ -47,11 +48,20 @@ meses_espanol = {
 layout=dbc.Container([
            html.Div([  
            html.Label("Paginas / Ventas Paises",style={"font-size":"14px","margin-top":"10px"}),
-           html.I(className="fas fa-user-alt",style={"margin-left":"830px","margin-top":"20px"}),
+           html.I(className="fas fa-user-alt",style={"margin-left":"815px","margin-top":"20px"}),
            html.I("Sign Out",style={"margin-left":"8px","margin-top":"20px","font-size":"14px",'font-weight': 'bold'}),
            html.I(className="fas fa-cog",style={"margin-left":"13px","margin-top":"20px"}),
-           html.I(className="fas fa-bell",style={"margin-left":"12px","margin-top":"20px"}),
+           dbc.Button(children=[html.I(className="fas fa-bell",style={"font-size":"20px","margin-top":"5px"})],id="popover-target",color="link")
            ],style={"display":"flex"}),
+           dbc.Popover(
+           [
+            dbc.PopoverHeader("Historial de actualizaciones"),
+            dbc.PopoverBody(html.Div(id='historial')),
+           ],
+           id="popover",
+           is_open=False,
+           target="popover-target",
+           ),
            
            dbc.Row(
                     html.Label("VENTAS PAISES",style={'font-weight': 'bold',"font-size":"14px"})
@@ -314,5 +324,29 @@ def actualizar_formato(value_a,stored_data):
    
   
    return tabla_formato,fig_mapa
+
+ # Esta función se encarga de abrir y cerrar el popover cuando se hace clic en el botón
+@app.callback(
+    Output("popover", "is_open"),
+    [Input("popover-target", "n_clicks")],
+    [State("popover", "is_open")],
+)
+def toggle_popover(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+# Esta función se encarga de mostrar el historial de actualizaciones cuando se hace clic en el botón
+@app.callback(Output('historial', 'children'), [Input('popover-target', 'n_clicks')])
+def mostrar_historial(n):
+    if n is not None:
+        # Verifica si el archivo existe antes de intentar abrirlo
+        if not os.path.exists('historial.txt'):
+            with open('historial.txt', 'w'): pass
+
+        # Ahora puedes abrir el archivo sin preocuparte por el error FileNotFoundError
+        with open("historial.txt", "r") as f:
+            actualizaciones = f.readlines()
+        return html.Ul([html.Li(act) for act in actualizaciones])
 
 
