@@ -26,7 +26,7 @@ def filter_commits(commits):
 
     # Filtra solo las últimas 10 actualizaciones
     filtered_commits = []
-    for commit in commits[:10]:
+    for commit in list[:10]:
         # Obtener la fecha y hora sin la 'T' y 'Z' y con el formato deseado
         fecha_raw = commit['commit']['author']['date']
         fecha_obj_utc = datetime.strptime(fecha_raw, "%Y-%m-%dT%H:%M:%SZ")
