@@ -95,7 +95,8 @@ vendiadmascat=dfmasvendidad.iloc[0,2]
 #------------------Clientes nuevos
 dfordenar=df.sort_values("Fecha_envio")
 ordenagrupado=dfordenar.drop_duplicates(subset="Nombre_cliente",keep="first")
-cliente_ordenado=ordenagrupado.groupby(["Año","N.MES"]).count().unstack(fill_value=0).stack().reset_index()[["Año","N.MES","Nombre_cliente"]]
+cliente_ordenado = ordenagrupado.groupby(["Año","N.MES"]).count().unstack(fill_value=0).stack(future_stack=True).reset_index()[["Año","N.MES","Nombre_cliente"]]
+
 dfxx=cliente_ordenado[(cliente_ordenado["Año"]==cliente_ordenado["Año"].max())&(cliente_ordenado["N.MES"]==cliente_ordenado["N.MES"].max())]
 nuevo_mes=dfxx.iloc[0,2]
 

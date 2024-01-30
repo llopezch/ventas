@@ -11,6 +11,7 @@ from actualizaciones import filter_commits, get_commit_history
 from dash.exceptions import PreventUpdate
 
 
+
 listas_años=[{"label":x,"value":x}for x in sorted(df["Año"].unique())]
 main_config = {
     "hovermode": "x unified",
