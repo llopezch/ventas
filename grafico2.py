@@ -47,7 +47,7 @@ meses_espanol = {
 
 layout=dbc.Container([
            html.Div([  
-           html.Label("Paginas / Ventas Paises",style={"font-size":"14px","margin-top":"10px"}),
+           html.Label("Paginas / Ventas Paises",style={"font-size":"13px","margin-top":"10px"}),
            html.I(className="fas fa-user-alt",style={"margin-left":"815px","margin-top":"20px"}),
            html.I("Sign Out",style={"margin-left":"8px","margin-top":"20px","font-size":"14px",'font-weight': 'bold'}),
            html.I(className="fas fa-cog",style={"margin-left":"13px","margin-top":"20px"}),
