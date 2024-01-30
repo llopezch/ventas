@@ -7,7 +7,8 @@ from dash import dcc,html,dash_table
 from app import app
 from df import df,lat_long
 import plotly.graph_objects as go
-import os
+from actualizaciones import filter_commits, get_commit_history
+from dash.exceptions import PreventUpdate
 
 
 listas_años=[{"label":x,"value":x}for x in sorted(df["Año"].unique())]
@@ -51,17 +52,38 @@ layout=dbc.Container([
            html.I(className="fas fa-user-alt",style={"margin-left":"815px","margin-top":"20px"}),
            html.I("Sign Out",style={"margin-left":"8px","margin-top":"20px","font-size":"14px",'font-weight': 'bold'}),
            html.I(className="fas fa-cog",style={"margin-left":"13px","margin-top":"20px"}),
-           dbc.Button(children=[html.I(className="fas fa-bell",style={"font-size":"20px","margin-top":"5px"})],id="popover-target",color="link")
-           ],style={"display":"flex"}),
+           dbc.Button(children=[html.I(className="fas fa-bell",style={"font-size":"20px","margin-top":"5px"})],id="popover-target",color="link"),
            dbc.Popover(
-           [
-            dbc.PopoverHeader("Historial de actualizaciones"),
-            dbc.PopoverBody(html.Div(id='historial')),
-           ],
-           id="popover",
-           is_open=False,
-           target="popover-target",
-           ),
+            [
+                dbc.PopoverHeader("Historial"),
+                dbc.PopoverBody(
+                    [
+                        html.Table(
+                            # Estructura de la tabla con la información del historial
+                            # Mostrar solo la columna 'Fecha'
+                            [html.Tr([html.Th('Fecha'), html.Th('Hora')])] +
+                            [html.Tr([
+                                html.Td(commit['fecha'],style={'font-weight': 'bold'}),
+                                html.Td(commit['hora'], style={'color': 'blue'})
+                             ]) for commit in filter_commits(get_commit_history())]
+                        ),
+                        dbc.Button("Cerrar", id="cerrar-btn", color="danger", className="mt-2",size="sm"),
+                    ]
+                ),
+            ],
+            id="popover",
+            is_open=False,
+            target="popover-target",
+            ),
+            dcc.Interval(
+            id='interval-component',
+            interval=10*1000,  # en milisegundos, actualizar cada 10 segundos
+            n_intervals=0
+            ),
+           
+           
+            ],style={"display":"flex"}),
+          
            
            dbc.Row(
                     html.Label("VENTAS PAISES",style={'font-weight': 'bold',"font-size":"14px"})
@@ -325,28 +347,25 @@ def actualizar_formato(value_a,stored_data):
   
    return tabla_formato,fig_mapa
 
- # Esta función se encarga de abrir y cerrar el popover cuando se hace clic en el botón
+# Callback para actualizar el popover con el historial
 @app.callback(
-    Output("popover", "is_open"),
-    [Input("popover-target", "n_clicks")],
-    [State("popover", "is_open")],
+    [Output('popover', 'is_open'),
+     Output('popover-target', 'n_clicks')],
+    [Input('popover-target', 'n_clicks'),
+     Input('cerrar-btn', 'n_clicks')],
+    prevent_initial_call=True
 )
-def toggle_popover(n, is_open):
-    if n:
-        return not is_open
-    return is_open
+def update_popover(historial_btn, cerrar_btn):
+    ctx = dash.callback_context
+    if not ctx.triggered_id:
+        raise PreventUpdate
 
-# Esta función se encarga de mostrar el historial de actualizaciones cuando se hace clic en el botón
-@app.callback(Output('historial', 'children'), [Input('popover-target', 'n_clicks')])
-def mostrar_historial(n):
-    if n is not None:
-        # Verifica si el archivo existe antes de intentar abrirlo
-        if not os.path.exists('historial.txt'):
-            with open('historial.txt', 'w'): pass
+    if 'popover-target' in ctx.triggered_id:
+        is_open = True
+    else:
+        is_open = False
 
-        # Ahora puedes abrir el archivo sin preocuparte por el error FileNotFoundError
-        with open("historial.txt", "r") as f:
-            actualizaciones = f.readlines()
-        return html.Ul([html.Li(act) for act in actualizaciones])
+    return is_open, 0
+
 
 
