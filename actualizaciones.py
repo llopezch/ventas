@@ -9,7 +9,7 @@ from pytz import timezone
 from app import app
 
 # Configura tu token de acceso personal de GitHub
-github_token = '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'
+github_token = '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'
 
 # Función para obtener el historial de commits desde GitHub
 def get_commit_history():
