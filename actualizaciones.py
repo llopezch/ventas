@@ -9,15 +9,21 @@ from pytz import timezone
 from app import app
 
 # Configura tu token de acceso personal de GitHub
-github_token = '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'
+github_token = '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'
 
 # Función para obtener el historial de commits desde GitHub
 def get_commit_history():
     repo_url = "https://api.github.com/repos/kont123456/datosventas/commits"
     headers = {'Authorization': f'token {github_token}'}
     response = requests.get(repo_url, headers=headers)
-    commits = response.json()
-    return commits
+
+    # Verificar si la solicitud fue exitosa (código de estado 200)
+    if response.status_code == 200:
+        commits = response.json()
+        return commits
+    else:
+        print(f"Error en la solicitud: {response.status_code}")
+        return []
 
 def filter_commits(commits):
     # Obtén la zona horaria local
