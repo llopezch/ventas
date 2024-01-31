@@ -10,7 +10,7 @@ from app import app
 
 
 # Configura tu token de acceso personal de GitHub
-github_token = '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'
+github_token = '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'
 
 # Función para obtener el historial de commits desde GitHub
 def get_commit_history():

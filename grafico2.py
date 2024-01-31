@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 from actualizaciones import filter_commits, get_commit_history
 from dash.exceptions import PreventUpdate
 
-github_token = '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'
+
 
 
 listas_años=[{"label":x,"value":x}for x in sorted(df["Año"].unique())]
