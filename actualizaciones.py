@@ -6,11 +6,10 @@ import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 from datetime import datetime
 from pytz import timezone
-from app import app
-
+import os
 
 # Configura tu token de acceso personal de GitHub
-github_token = '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'
+github_token = os.getenv('GITHUB_TOKEN')
 
 # Función para obtener el historial de commits desde GitHub
 def get_commit_history():
