@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 from datetime import datetime
 from pytz import timezone
-from app import app
+
 
 
 # Configura tu token de acceso personal de GitHub
