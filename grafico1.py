@@ -7,7 +7,8 @@ from dash import dcc,html,dash_table
 from app import app
 from df import df
 import plotly.graph_objects as go
-
+from actualizaciones import filter_commits, get_commit_history
+from dash.exceptions import PreventUpdate
 
 listas_años=[{"label":x,"value":x}for x in sorted(df["Año"].unique())]
 main_config = {
@@ -104,14 +105,132 @@ nuevo_mes=dfxx.iloc[0,2]
 
 
 layout=dbc.Container([
-           html.Div([    
-           html.Label("Paginas / Ventas totales",style={"font-size":"5px","margin-top":"10px"}),
-           html.I(className="fas fa-user-alt",style={"margin-left":"790px","margin-top":"20px"}),
-           html.I("Sign Out",style={"margin-left":"8px","margin-top":"20px","font-size":"14px",'font-weight': 'bold'}),
-           html.I(className="fas fa-cog",style={"margin-left":"13px","margin-top":"20px"}),
-           html.I(className="fas fa-bell",style={"margin-left":"12px","margin-top":"20px"}),
-           ],style={"display":"flex"}),
-           dbc.Row(
+         dbc.Row([ 
+             dbc.Col([    
+             html.Label("Paginas / Ventas Paises",style={"font-size":"14px","margin-top":"10px"})
+             ],width=8),  
+             dbc.Col([            
+             dbc.Button(children=[html.I(className="fas fa-user-alt",style={"margin-top":"5px","margin-left":"55px","font-size":"20px"})],id="prof",color="link"),
+               dbc.Popover([
+               dbc.PopoverHeader("Perfil Usuario"),
+               dbc.PopoverBody([
+                   html.H6("Datos",style={"color":"red"}),
+                   dbc.Row([
+                       dbc.Col([
+                           html.H6("Usuario :")
+                       ],width=4),
+                       dbc.Col([
+                           html.H6("Luis Lopez Chavez")
+                       ],width=8),
+                   ]),
+                   dbc.Row([
+                       dbc.Col([
+                           html.H6("Area :")
+                       ],width=4),
+                       dbc.Col([
+                           html.H6("Tesoreria")
+                       ],width=8),
+                   ]),
+                   dbc.Row([
+                       dbc.Col([
+                           html.H6("Email :")
+                       ],width=4),
+                       dbc.Col([
+                           html.H6("luisalbertt22@gmail.com")
+                       ],width=8),
+                   ]),
+                   dbc.Row([
+                       dbc.Col([
+                           html.H6("Celular :")
+                       ],width=4),
+                       dbc.Col([
+                           html.H6("993705286")
+                       ],width=8),
+                   ]),
+                   
+                   dbc.Row([
+                       dbc.Col([
+                           html.H6("Empresa :")
+                       ],width=4),
+                       dbc.Col([
+                           html.H6("Grupo Gloria S.A.")
+                       ],width=8),
+                   ]),
+                   
+                   
+                   
+                   dbc.Button("Cerrar", id="cerrar1", color="danger", className="mt-2",size="sm")
+               ])
+               ],
+               id="popover5",
+               is_open=False,
+               target="prof", # este es el id del botón que activará el Popover
+               placement='bottom',  # Cambio aquí
+        
+              ),
+                
+             ],width=1),
+             dbc.Col([  
+                html.I("Sign Out",style={"font-size":"18px",'font-weight':'bold',"margin-left":"15px"}),
+             ],style={"margin-top":"15px"},width=1), 
+             dbc.Col([
+               dbc.Button(children=[html.I(className="fas fa-cog",style={"margin-top":"5px","margin-left":"-10px","font-size":"20px"})],id="conf",color="link"),
+               dbc.Popover([
+               dbc.PopoverHeader("Configuracion"),
+               dbc.PopoverBody([
+                   html.H6("Selecciona un Tema"),
+                   dcc.RadioItems(
+                       id="tema_selecion",
+                       options=[{"label":"Claro","value":"Claro"},
+                                {"label":"Oscuro","value":"Oscuro"}],
+                       value="Claro",
+                       labelStyle={"display":"block"}
+                   ),
+                   dbc.Button("Cerrar", id="cerrar2", color="danger", className="mt-2",size="sm")
+               ])
+               ],
+               id="popover6",
+               is_open=False,
+               target="conf", # este es el id del botón que activará el Popover
+               placement='bottom',  # Cambio aquí
+        
+              ),
+             ],width=1),  
+             dbc.Col([
+              
+                dbc.Button(children=[html.I(className="fas fa-bell",style={"margin-left":"-100px","font-size":"20px","margin-top":"5px"})],id="campa",color="link"),
+                dbc.Popover([
+            
+                   dbc.PopoverHeader("Historial"),
+                   dbc.PopoverBody([
+                    
+                        html.Table(
+                            # Estructura de la tabla con la información del historial
+                            # Mostrar solo la columna 'Fecha'
+                            [html.Tr([html.Th('Fecha'), html.Th('Hora')])] +
+                            [html.Tr([
+                                html.Td(commit['fecha'],style={'font-weight': 'bold'}),
+                                html.Td(commit['hora'], style={'color': 'blue'})
+                             ]) for commit in filter_commits(get_commit_history())]
+                        ),
+                        dbc.Button("Cerrar", id="cerrar3", color="danger", className="mt-2",size="sm"),
+                   ]),
+               
+               ],
+                  id="popover7",
+                  is_open=False,
+                  target="campa",
+                  placement='bottom',  # Cambio aquí
+                ),
+                dcc.Interval(
+                id='interval-component',
+                interval=10*1000,  # en milisegundos, actualizar cada 10 segundos
+                n_intervals=0
+                ),
+             ],width=1), 
+           
+         ],style={"display":"flex"}),
+         dbc.Row(
                html.Label("VENTAS TOTALES",style={'font-weight': 'bold',"font-size":"14px"})
            ),
            html.Br(),
@@ -416,7 +535,55 @@ def actualizar_datos(value1,value2,value3):
 
      )
     
+# Callback para actualizar el popover con el historial
+@app.callback(
+    [Output('popover7', 'is_open'),
+     Output('campa', 'n_clicks')],
+    [Input('campa', 'n_clicks'),
+     Input('cerrar3', 'n_clicks')],
+    prevent_initial_call=True
+)
+def update_popover(hist_btn, cer_btn):
+    ctx = dash.callback_context
+    if not ctx.triggered_id:
+        raise PreventUpdate
 
+    if 'campa' in ctx.triggered_id:
+        is_open = True
+    else:
+        is_open = False
+
+    return is_open, 0
+
+@app.callback(
+    [Output('popover6', 'is_open'),
+     Output('conf', 'n_clicks')],
+    [Input('conf', 'n_clicks'),
+     Input('cerrar2', 'n_clicks')]
+)
+def actualizar_popover(conf_btn_clicks, cer_btn_clicks):
+    ctx = dash.callback_context
+    if not ctx.triggered_id:
+        raise PreventUpdate
+
+    is_open = True if 'conf' in ctx.triggered_id else False
+
+    return is_open, 0
+
+@app.callback(
+    [Output('popover5', 'is_open'),
+     Output('prof', 'n_clicks')],
+    [Input('prof', 'n_clicks'),
+     Input('cerrar1', 'n_clicks')]
+)
+def actualizar_popover(btn_clicks, cerr_btn_clicks):
+    ctx = dash.callback_context
+    if not ctx.triggered_id:
+        raise PreventUpdate
+
+    is_open = True if 'prof' in ctx.triggered_id else False
+
+    return is_open, 0
 
 
 

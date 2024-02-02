@@ -31,5 +31,5 @@ def actualizar_url(pathname):
        return grafico2.layout
 
 if __name__== '__main__':
-   app.run_server(host='0.0.0.0', port='8050')
+   app.run_server(port=8050,debug=True)
    #----esto compartes en otras maquinas pero misma red---------app.run_server(host='0.0.0.0', port='8050')
