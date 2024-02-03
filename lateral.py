@@ -11,7 +11,7 @@ layout=dbc.Container([
          dbc.Card([
              html.Div([
                     html.I(className="fas fa-th",style={"margin":"auto", "font-size":"30px","color":"white"}), 
-                    html.H1("Ventas Totales",style={"font-size":"16px","padding-top": "15px","color":"white","margin-right":"34px"}),
+                    html.H1("Ventas Totales",style={"font-size":"17px","padding-top": "15px","color":"white","margin-right":"34px"}),
           ],style={"display":"flex","margin-top":"25px"}),
        
            html.Hr(style={"color":"white"}),
