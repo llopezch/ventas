@@ -53,9 +53,10 @@ layout=dbc.Container([
         dbc.Row([ 
              dbc.Col([    
              html.Label("Paginas / Ventas Paises",style={"font-size":"14px","margin-top":"10px"})
-             ],width=8),  
-             dbc.Col([            
-             dbc.Button(children=[html.I(className="fas fa-user-alt",style={"margin-top":"5px","margin-left":"55px","font-size":"20px"})],id="profile",color="link"),
+             ],width=9),  
+             dbc.Col([ 
+             html.Div([                      
+             dbc.Button(children=[html.I(className="fas fa-user-alt",style={"margin-top":"5px","margin-left":"5px","font-size":"19px"})],id="profile",color="link"),
                dbc.Popover([
                dbc.PopoverHeader("Perfil Usuario"),
                dbc.PopoverBody([
@@ -113,13 +114,12 @@ layout=dbc.Container([
                placement='bottom',  # Cambio aquí
         
               ),
-                
+             html.I("Sign Out",style={"font-size":"18px",'font-weight':'bold',"margin-left":"-5px","margin-top":"15px"}), 
+             ], style={'display': 'flex'}),   
              ],width=1),
-             dbc.Col([  
-                html.I("Sign Out",style={"font-size":"18px",'font-weight':'bold',"margin-left":"15px"}),
-             ],style={"margin-top":"15px"},width=1), 
+          
              dbc.Col([
-               dbc.Button(children=[html.I(className="fas fa-cog",style={"margin-top":"5px","margin-left":"-10px","font-size":"20px"})],id="config",color="link"),
+               dbc.Button(children=[html.I(className="fas fa-cog",style={"margin-top":"5px","margin-left":"29px","font-size":"19px"})],id="config",color="link"),
                dbc.Popover([
                dbc.PopoverHeader("Configuracion"),
                dbc.PopoverBody([
@@ -143,7 +143,7 @@ layout=dbc.Container([
              ],width=1),  
              dbc.Col([
               
-                dbc.Button(children=[html.I(className="fas fa-bell",style={"margin-left":"-100px","font-size":"20px","margin-top":"5px"})],id="popover-target",color="link"),
+                dbc.Button(children=[html.I(className="fas fa-bell",style={"margin-left":"-33px","font-size":"19px","margin-top":"5px"})],id="popover-target",color="link"),
                 dbc.Popover([
             
                    dbc.PopoverHeader("Historial"),

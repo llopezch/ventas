@@ -71,8 +71,8 @@ layout=dbc.Container([
                dbc.Col([
                    
                        dbc.Nav([
-                           dbc.NavLink("ventas totales",href="/grafico1",active="exact"),
-                           dbc.NavLink("ventas paises",href="/grafico2",active="exact")
+                           dbc.NavLink([html.I(className="fas fa-chart-bar")," Ventas Totales"],href="/grafico1",active="exact"),
+                           dbc.NavLink([html.I(className="fa fa-globe"),"  Ventas Países"],href="/grafico2",active="exact")
                        ],vertical=True,pills=True,id="nav-link",style={"margin-bottom":"1px","width": "210px","padding-left": "15px","textAlign": "center"})
                   
                ])
